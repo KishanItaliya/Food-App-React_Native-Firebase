@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "162826915236",
+    "project_id": "food-review-308615",
+    "storage_bucket": "food-review-308615.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162826915236:android:a6c422032a9a9033774531",
+        "android_client_info": {
+          "package_name": "com.aahar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162826915236-jslt39a8uhnlarl47b6322hf090oermb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDNwxSnG-0-ryeKtQ0IMuZueIODZq9OB0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162826915236-jslt39a8uhnlarl47b6322hf090oermb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
