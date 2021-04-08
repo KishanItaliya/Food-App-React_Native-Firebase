@@ -297,7 +297,7 @@ export const restaurantData = [
     },
     menu: [
       {
-        menuId: 12,
+        menuId: 14,
         name: 'Teh C Peng',
         photo: images.teh_c_peng,
         description: 'Three Layer Teh C Peng',
@@ -305,7 +305,7 @@ export const restaurantData = [
         price: 399,
       },
       {
-        menuId: 13,
+        menuId: 15,
         name: 'ABC Ice Kacang',
         photo: images.ice_kacang,
         description: 'Shaved Ice with red beans',
@@ -313,7 +313,7 @@ export const restaurantData = [
         price: 299,
       },
       {
-        menuId: 14,
+        menuId: 16,
         name: 'Kek Lapis',
         photo: images.kek_lapis,
         description: 'Layer cakes',

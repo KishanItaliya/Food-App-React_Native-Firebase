@@ -16,6 +16,7 @@ import Restaurant from '../screens/Home/Restaurant';
 import Reviews from '../screens/Home/Reviews';
 import OrderDelivery from '../screens/Home/OrderDelivery';
 import Cart from '../screens/Home/Cart';
+import Payment from '../screens/Home/Payment';
 
 const HomeStack = createStackNavigator();
 
@@ -172,6 +173,7 @@ const HomeScreen = () => (
     <HomeStack.Screen name="Restaurant" component={Restaurant} />
     <HomeStack.Screen name="Reviews" component={Reviews} />
     <HomeStack.Screen name="Cart" component={Cart} />
+    <HomeStack.Screen name="Payment" component={Payment} />
     <HomeStack.Screen name="OrderDelivery" component={OrderDelivery} />
   </HomeStack.Navigator>
 );

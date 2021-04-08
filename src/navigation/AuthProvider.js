@@ -13,7 +13,15 @@ export const AuthProvider = ({children}) => {
         setUser,
         login: async (email, password) => {
           try {
-            await auth().signInWithEmailAndPassword(email, password);
+            await auth()
+              .signInWithEmailAndPassword(email, password)
+              .catch(error => {
+                if (error.code === 'auth/user-not-found') {
+                  alert('Please SignUp first!!');
+                } else {
+                  alert(error);
+                }
+              });
           } catch (e) {
             console.log(e);
           }
@@ -30,11 +38,11 @@ export const AuthProvider = ({children}) => {
               .catch(error => {
                 if (error.code === 'auth/email-already-in-use') {
                   alert('That email address is already in use!');
-                }
-                if (error.code === 'auth/invalid-email') {
+                } else if (error.code === 'auth/invalid-email') {
                   alert('That email address is invalid!');
+                } else {
+                  alert(error);
                 }
-                alert(error);
               });
 
             let db = firestore().collection('users').doc(userId);

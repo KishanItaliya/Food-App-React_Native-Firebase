@@ -13,8 +13,10 @@ import {isIphoneX} from 'react-native-iphone-x-helper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {RectButton} from 'react-native-gesture-handler';
 import {icons, COLORS, SIZES, FONTS} from '../../../constants';
+import {connect} from 'react-redux';
+import {ADD_TO_CART} from '../../../redux/actions';
 
-const Restaurant = ({route, navigation}) => {
+const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
   const scrollX = new Animated.Value(0);
   const [restaurant, setRestaurant] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -25,60 +27,6 @@ const Restaurant = ({route, navigation}) => {
     setRestaurant(item);
     setCurrentLocation(currentLocation);
   });
-
-  const editOrder = (action, menuId, price, food) => {
-    let orderList = orderItems.slice();
-    let item = orderList.filter(a => a.menuId == menuId);
-    if (action == '+') {
-      if (item.length > 0) {
-        let newQty = item[0].qty + 1;
-        item[0].qty = newQty;
-        item[0].total = item[0].qty * price;
-      } else {
-        const newItem = {
-          menuId: menuId,
-          qty: 1,
-          price: price,
-          total: price,
-          food: food,
-          name: restaurant?.name,
-          location: restaurant?.location,
-          courier: restaurant?.courier,
-          rating: restaurant?.rating,
-        };
-        orderList.push(newItem);
-      }
-      setOrderItems(orderList);
-    } else {
-      if (item.length > 0) {
-        if (item[0]?.qty > 0) {
-          let newQty = item[0].qty - 1;
-          item[0].qty = newQty;
-          item[0].total = newQty * price;
-        }
-      }
-      setOrderItems(orderList);
-    }
-  };
-
-  const getOrderQty = menuId => {
-    let orderItem = orderItems.filter(a => a.menuId == menuId);
-
-    if (orderItem.length > 0) {
-      return orderItem[0].qty;
-    }
-    return 0;
-  };
-
-  const getBasketItemCount = () => {
-    let itemCount = orderItems.reduce((a, b) => a + (b.qty || 0), 0);
-    return itemCount;
-  };
-
-  const sumOrder = () => {
-    let total = orderItems.reduce((a, b) => a + (b.total || 0), 0);
-    return total.toFixed(2);
-  };
 
   const renderHeader = () => {
     return (
@@ -222,65 +170,29 @@ const Restaurant = ({route, navigation}) => {
                       height: 50,
                       justifyContent: 'center',
                       flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                    <View
+                    <Pressable
                       style={{
-                        borderTopLeftRadius: 25,
-                        borderBottomLeftRadius: 25,
-                        backgroundColor: COLORS.white,
-                      }}>
-                      <RectButton
-                        style={{
-                          width: 50,
-                          height: 50,
-                          borderTopLeftRadius: 25,
-                          borderBottomLeftRadius: 25,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                        onPress={() =>
-                          editOrder('-', item.menuId, item.price, item)
-                        }>
-                        <Text style={{...FONTS.h1}}>-</Text>
-                      </RectButton>
-                    </View>
-
-                    <View
-                      style={{
-                        width: 50,
-                        backgroundColor: COLORS.white,
+                        width: SIZES.spacing.xl * 4,
+                        height: 40,
+                        padding: SIZES.base,
+                        backgroundColor: COLORS.blue,
                         alignItems: 'center',
-                        justifyContent: 'center',
+                        borderRadius: SIZES.radius * 2,
+                      }}
+                      onPress={() => {
+                        add_to_cart(item, restaurant?.name);
+                        navigation.navigate('Cart');
                       }}>
                       <Text
                         style={{
-                          ...FONTS.h5,
+                          color: COLORS.white,
+                          ...FONTS.h6,
                         }}>
-                        {getOrderQty(item.menuId)}
+                        Add to Cart
                       </Text>
-                    </View>
-
-                    <View
-                      style={{
-                        borderTopRightRadius: 25,
-                        borderBottomRightRadius: 25,
-                        backgroundColor: COLORS.white,
-                      }}>
-                      <RectButton
-                        style={{
-                          width: 50,
-                          height: 50,
-                          borderTopRightRadius: 25,
-                          borderBottomRightRadius: 25,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                        onPress={() =>
-                          editOrder('+', item.menuId, item.price, item)
-                        }>
-                        <Text style={{...FONTS.h1}}>+</Text>
-                      </RectButton>
-                    </View>
+                    </Pressable>
                   </View>
                 </View>
                 {/* Name & Description */}
@@ -364,7 +276,7 @@ const Restaurant = ({route, navigation}) => {
               borderTopLeftRadius: 40,
               borderTopRightRadius: 40,
             }}>
-            <View
+            {/* <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -373,10 +285,8 @@ const Restaurant = ({route, navigation}) => {
                 borderBottomColor: COLORS.lightGray,
                 borderBottomWidth: 1,
               }}>
-              <Text style={{...FONTS.h3}}>
-                {getBasketItemCount()} items in Cart
-              </Text>
-              <Text style={{...FONTS.h3}}>₹{sumOrder()}</Text>
+              <Text style={{...FONTS.h3}}>{amount} items in Cart</Text>
+              <Text style={{...FONTS.h3}}>₹{total}</Text>
             </View>
             <View
               style={{
@@ -402,9 +312,9 @@ const Restaurant = ({route, navigation}) => {
                   }}>
                   Location
                 </Text>
-              </View>
+              </View> */}
 
-              <View style={{flexDirection: 'row'}}>
+            {/* <View style={{flexDirection: 'row'}}>
                 <Image
                   source={icons.master_card}
                   resizeMode="contain"
@@ -422,7 +332,7 @@ const Restaurant = ({route, navigation}) => {
                   8888
                 </Text>
               </View>
-            </View>
+            </View> */}
             {/* Order Button */}
             <View
               style={{
@@ -432,11 +342,12 @@ const Restaurant = ({route, navigation}) => {
               }}>
               <Pressable
                 style={{
-                  width: SIZES.width * 0.9,
+                  width: SIZES.width * 0.6,
+                  height: 40,
                   padding: SIZES.base,
                   backgroundColor: COLORS.blue,
                   alignItems: 'center',
-                  borderRadius: SIZES.radius,
+                  borderRadius: SIZES.radius * 2,
                 }}
                 onPress={() => {
                   // console.log("RESTAU>>>", restaurant?.name),
@@ -444,15 +355,17 @@ const Restaurant = ({route, navigation}) => {
                   //     restaurant: restaurant,
                   //     curentLocation: curentLocation,
                   //   });
-                  navigation.navigate('Cart', {orderItems});
+                  navigation.navigate('Cart');
                 }}>
-                <Text
-                  style={{
-                    color: COLORS.white,
-                    ...FONTS.h6,
-                  }}>
-                  Go to Cart
-                </Text>
+                <View style={{alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      ...FONTS.h6,
+                    }}>
+                    GO TO CART
+                  </Text>
+                </View>
               </Pressable>
             </View>
           </View>
@@ -490,4 +403,31 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Restaurant;
+const mapDispatchToProps = dispatch => {
+  return {
+    add_to_cart: (item, name) =>
+      dispatch({
+        type: ADD_TO_CART,
+        id: item.menuId,
+        payload: {
+          restaurant: name,
+          // item: {
+          id: item.menuId,
+          name: item.name,
+          calories: item.calories,
+          description: item.description,
+          photo: item.photo,
+          price: item.price,
+          qty: 1,
+          // },
+        },
+      }),
+  };
+};
+
+const mapStateToProps = store => {
+  const {cart, total, amount} = store;
+  return {cart, total, amount};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Restaurant);
