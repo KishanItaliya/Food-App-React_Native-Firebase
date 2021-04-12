@@ -6,26 +6,51 @@ import {
   GET_TOTALS,
   TOGGLE_AMOUNT,
   ADD_TO_CART,
+  CLEAR_RESTAU_ID,
 } from './actions';
+import {Alert} from 'react-native';
 
 // initial store
 const initialStore = {
   cart: [],
   total: 0,
   amount: 0,
+  name: null,
+  id: null,
 };
 
 function reducer(state = initialStore, action) {
   switch (action.type) {
     case ADD_TO_CART:
       let addToCart;
-      if (state.cart.length == 0) {
+      if (state.cart.length === 0) {
         addToCart = [...state.cart, action.payload];
         state.amount = state.amount + 1;
+        state.name = action.payload.restaurant;
+        state.id = action.payload.restaurant_id;
       } else {
         state.cart.map(cartItem => {
+          const name = cartItem.restaurant;
           if (cartItem.id !== action.id) {
-            addToCart = [...state.cart, action.payload];
+            if (cartItem.restaurant_id === action.restaurant_id) {
+              addToCart = [...state.cart, action.payload];
+            } else {
+              addToCart = [...state.cart];
+              Alert.alert(
+                'Remove cart item?',
+                `Your cart contains dishes from ${name}. If you want to add dishes from ${action.restaurant} then clear your cart first!!`,
+                [
+                  {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                ],
+                {
+                  cancelable: true,
+                },
+              );
+            }
           } else {
             addToCart = [...state.cart];
           }
@@ -44,6 +69,13 @@ function reducer(state = initialStore, action) {
         ...state,
         cart: [],
         amount: 0,
+      };
+
+    case CLEAR_RESTAU_ID:
+      return {
+        ...state,
+        name: null,
+        id: null,
       };
 
     case DECREASE:

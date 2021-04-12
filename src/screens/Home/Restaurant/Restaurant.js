@@ -11,12 +11,13 @@ import {
 } from 'react-native';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {RectButton} from 'react-native-gesture-handler';
 import {icons, COLORS, SIZES, FONTS} from '../../../constants';
 import {connect} from 'react-redux';
 import {ADD_TO_CART} from '../../../redux/actions';
 
-const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
+const Restaurant = ({route, navigation, add_to_cart, cart, total, amount}) => {
   const scrollX = new Animated.Value(0);
   const [restaurant, setRestaurant] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -152,14 +153,38 @@ const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
               <View style={{height: SIZES.height * 0.65}}>
                 {/* Image */}
                 <View style={{height: SIZES.height * 0.35}}>
-                  <Image
-                    source={item.photo}
-                    resizeMode="cover"
-                    style={{
-                      width: SIZES.width,
-                      height: '100%',
-                    }}
-                  />
+                  <View style={{alignItems: 'center', marginTop: 15}}>
+                    <Image
+                      source={item.photo}
+                      resizeMode="cover"
+                      style={{
+                        width: SIZES.width * 0.9,
+                        height: '100%',
+                        borderRadius: SIZES.borderRadii.l,
+                      }}
+                    />
+                    <View
+                      style={{
+                        width: 40,
+                        height: 40,
+                        backgroundColor: COLORS.white,
+                        borderRadius: 20,
+                        position: 'absolute',
+                        top: 20,
+                        left: 35,
+                      }}>
+                      <Icon
+                        name="arrow-back"
+                        size={30}
+                        color={COLORS.blue}
+                        style={{
+                          left: 5,
+                          top: 5,
+                        }}
+                        onPress={() => navigation.goBack()}
+                      />
+                    </View>
+                  </View>
 
                   {/* Quantity */}
                   <View
@@ -182,7 +207,7 @@ const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
                         borderRadius: SIZES.radius * 2,
                       }}
                       onPress={() => {
-                        add_to_cart(item, restaurant?.name);
+                        add_to_cart(item, restaurant?.name, restaurant?.id);
                         navigation.navigate('Cart');
                       }}>
                       <Text
@@ -247,7 +272,7 @@ const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
                 </View>
 
                 {/* Reviews */}
-                <Pressable
+                {/* <Pressable
                   style={{
                     flexDirection: 'row',
                     marginTop: 10,
@@ -262,7 +287,7 @@ const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
                     }}>
                     Check Reviews {`>>`}
                   </Text>
-                </Pressable>
+                </Pressable> */}
               </View>
             </View>
           ))}
@@ -271,11 +296,13 @@ const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
         <View>
           {renderDots()}
           <View
-            style={{
-              backgroundColor: COLORS.white,
-              borderTopLeftRadius: 40,
-              borderTopRightRadius: 40,
-            }}>
+            style={
+              {
+                // backgroundColor: COLORS.white,
+                // borderTopLeftRadius: 40,
+                // borderTopRightRadius: 40,
+              }
+            }>
             {/* <View
               style={{
                 flexDirection: 'row',
@@ -339,6 +366,7 @@ const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
                 padding: SIZES.base * 2,
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginTop: 10,
               }}>
               <Pressable
                 style={{
@@ -388,7 +416,7 @@ const Restaurant = ({route, navigation, add_to_cart, total, amount}) => {
   const insets = useSafeAreaInsets();
   return (
     <View style={[styles.container, {marginTop: insets.top}]}>
-      {renderHeader()}
+      {/* {renderHeader()} */}
       <ScrollView showsVerticalScrollIndicator={false}>
         {renderFoodInfo()}
       </ScrollView>
@@ -405,12 +433,15 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    add_to_cart: (item, name) =>
+    add_to_cart: (item, name, id) =>
       dispatch({
         type: ADD_TO_CART,
         id: item.menuId,
+        restaurant_id: id,
+        restaurant: name,
         payload: {
           restaurant: name,
+          restaurant_id: id,
           // item: {
           id: item.menuId,
           name: item.name,

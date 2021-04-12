@@ -34,7 +34,7 @@ const Search = ({navigation}) => {
   }, []);
 
   return (
-    <View style={{backgroundColor: COLORS.white}}>
+    <View style={{backgroundColor: COLORS.white, flex: 1}}>
       <Header
         title="Search"
         left={{icon: 'menu', onPress: () => navigation.openDrawer()}}

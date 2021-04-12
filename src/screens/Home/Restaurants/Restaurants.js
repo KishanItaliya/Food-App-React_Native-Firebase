@@ -10,7 +10,11 @@ const Restaurants = ({navigation}) => {
       <Header
         title="Aahar"
         left={{icon: 'menu', onPress: () => navigation.openDrawer()}}
-        right={{icon: 'shopping-cart', onPress: () => true}}
+        right={{
+          icon: 'shopping-cart',
+          onPress: () => navigation.navigate('Cart'),
+        }}
+        cart
       />
       <ListCategories />
     </View>

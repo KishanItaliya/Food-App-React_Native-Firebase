@@ -5,7 +5,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Svg, {Path} from 'react-native-svg';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import {COLORS, icons} from '../constants';
@@ -17,6 +17,10 @@ import Reviews from '../screens/Home/Reviews';
 import OrderDelivery from '../screens/Home/OrderDelivery';
 import Cart from '../screens/Home/Cart';
 import Payment from '../screens/Home/Payment';
+import SubmitReview from '../screens/Home/Reviews/SubmitReview';
+import Review from '../screens/Home/Review';
+import Profile from '../screens/Home/Profile';
+import userReviews from '../screens/Home/userReviews';
 
 const HomeStack = createStackNavigator();
 
@@ -129,32 +133,57 @@ const MainTabScreen = () => (
       }}
     />
     <Tab.Screen
-      name="Search"
-      component={Search}
+      name="UserReviews"
+      component={userReviews}
       options={{
+        tabBarLabel: 'UserReviews',
         tabBarIcon: ({focused}) => (
-          <Image
-            source={icons.search}
-            resizeMode="contain"
-            style={{
-              width: 25,
-              height: 25,
-              tintColor: focused ? COLORS.blue : COLORS.skyBlue,
-            }}
+          <Icon
+            name="book"
+            color={focused ? COLORS.blue : COLORS.skyBlue}
+            size={25}
           />
         ),
         // tabBarButton: props => <TabBarCustomButton {...props} />,
       }}
     />
-
     <Tab.Screen
-      name="Setting"
-      component={Setting}
+      name="Search"
+      component={Search}
       options={{
-        tabBarLabel: 'Setting',
         tabBarIcon: ({focused}) => (
           <Icon
-            name="bell"
+            name="search"
+            color={focused ? COLORS.blue : COLORS.skyBlue}
+            size={25}
+          />
+        ),
+        // tabBarButton: props => <TabBarCustomButton {...props} />,
+      }}
+    />
+    <Tab.Screen
+      name="Profile"
+      component={Profile}
+      options={{
+        tabBarLabel: 'Profile',
+        tabBarIcon: ({focused}) => (
+          <Icon
+            name="user"
+            color={focused ? COLORS.blue : COLORS.skyBlue}
+            size={25}
+          />
+        ),
+        // tabBarButton: props => <TabBarCustomButton {...props} />,
+      }}
+    />
+    <Tab.Screen
+      name="Cart"
+      component={Cart}
+      options={{
+        tabBarLabel: 'Cart',
+        tabBarIcon: ({focused}) => (
+          <Icon
+            name="shopping-cart"
             color={focused ? COLORS.blue : COLORS.skyBlue}
             size={25}
           />
@@ -172,7 +201,8 @@ const HomeScreen = () => (
     <HomeStack.Screen name="Restaurants" component={Restaurants} />
     <HomeStack.Screen name="Restaurant" component={Restaurant} />
     <HomeStack.Screen name="Reviews" component={Reviews} />
-    <HomeStack.Screen name="Cart" component={Cart} />
+    <HomeStack.Screen name="SubmitReview" component={SubmitReview} />
+    <HomeStack.Screen name="Review" component={Review} />
     <HomeStack.Screen name="Payment" component={Payment} />
     <HomeStack.Screen name="OrderDelivery" component={OrderDelivery} />
   </HomeStack.Navigator>

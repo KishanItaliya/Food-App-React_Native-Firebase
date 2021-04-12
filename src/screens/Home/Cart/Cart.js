@@ -7,13 +7,13 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {v4 as uuidv4} from 'uuid';
 import {COLORS, FONTS, SIZES} from '../../../constants';
 import {groupBy, chain} from 'lodash';
 import axios from 'axios';
 import RazorpayCheckout from 'react-native-razorpay';
+import IoniconsHeader from '../../../components/IoniconsHeader';
 import {RazorpayApiKey} from './config';
 import {AuthContext} from '../../../navigation/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
@@ -21,7 +21,7 @@ import {connect} from 'react-redux';
 import CartItem from './CartItem';
 import {CLEAR_CART, GET_TOTALS} from '../../../redux/actions';
 
-const Cart = ({route, navigation, cart, total, dispatch}) => {
+const Cart = ({route, navigation, cart, total, amount, dispatch, name}) => {
   const {user} = useContext(AuthContext);
   const [profile, setProfile] = useState({});
   const insets = useSafeAreaInsets();
@@ -57,19 +57,33 @@ const Cart = ({route, navigation, cart, total, dispatch}) => {
   }, []);
 
   // Store Order In DATABASE
-  const saveOrder = async transaction => {
+  const saveOrder = async (transaction, cart) => {
     console.log(transaction);
+    console.log(cart);
+    const orderId = transaction.razorpay_order_id;
     try {
-      let db = firestore().collection('orders').doc(user.uid);
+      let db = firestore()
+        .collection('users')
+        .doc(user.uid)
+        .collection('orders')
+        .doc(orderId);
 
-      db.set({
-        order_id: transaction.razorpay_order_id,
-        payment_id: transaction.razorpay_payment_id,
-        total: total,
-      });
+      if (name !== null) {
+        db.set({
+          order_id: transaction.razorpay_order_id,
+          payment_id: transaction.razorpay_payment_id,
+          signature: transaction.razorpay_signature,
+          name: name,
+          total: total,
+          cart: cart,
+        });
+      } else {
+        console.log('Order not stored!!');
+      }
     } catch (error) {
-      console.log('ERROR: ', error);
+      console.log('ERROR', error);
     }
+    dispatch({type: CLEAR_CART});
   };
 
   // Payment Gateway
@@ -125,8 +139,11 @@ const Cart = ({route, navigation, cart, total, dispatch}) => {
         // const s = await verifyPayment(order.id, transaction);
         // console.log(s);
         console.log(transaction);
-        saveOrder(transaction);
+        saveOrder(transaction, cart);
         alert(`Payment Successful for: ${transaction.razorpay_payment_id}`);
+        navigation.navigate('SubmitReview', {
+          payment_id: transaction.razorpay_payment_id,
+        });
       })
       .catch(error => {
         // **** payment failure ****
@@ -155,6 +172,7 @@ const Cart = ({route, navigation, cart, total, dispatch}) => {
               borderRadius: SIZES.radius,
               marginBottom: SIZES.padding,
               padding: SIZES.padding,
+              elevation: 15,
             }}>
             <Text
               style={{
@@ -169,129 +187,27 @@ const Cart = ({route, navigation, cart, total, dispatch}) => {
                 return <CartItem key={x.id} {...x} />;
               })}
             </View>
+            <View
+              style={{
+                marginTop: 15,
+                alignItems: 'flex-end',
+                borderTopWidth: 2,
+                borderTopColor: COLORS.white,
+              }}>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 22,
+                  lineHeight: 26,
+                  color: COLORS.white,
+                  marginTop: 10,
+                }}>
+                Total: ₹{total}
+              </Text>
+            </View>
           </View>
         </View>
       );
-      // return (
-      //   <View
-      //     style={{
-      //       width: SIZES.width * 0.9,
-      //       backgroundColor: COLORS.blue,
-      //       alignSelf: 'center',
-      //       borderRadius: SIZES.radius,
-      //       marginBottom: SIZES.padding,
-      //       padding: SIZES.padding,
-      //     }}>
-      //     <Text
-      //       style={{
-      //         ...FONTS.h5,
-      //         color: COLORS.white,
-      //       }}>
-      //       {restaurant.name}
-      //     </Text>
-      //     <View>
-      //       {restaurant?.restaurants.map(item => {
-      //         const qty = item.qty;
-      //         total += item.total;
-      //         if (qty > 0) {
-      //           return (
-      //             <View key={item.menuId} style={{marginTop: 10}}>
-      //               <View
-      //                 style={{
-      //                   flex: 1,
-      //                   flexDirection: 'row',
-      //                   alignItems: 'center',
-      //                 }}>
-      //                 <View style={{flex: 0.3, marginRight: 10}}>
-      //                   <Image
-      //                     source={item.food.photo}
-      //                     style={{
-      //                       height: 80,
-      //                       width: 80,
-      //                       borderRadius: 40,
-      //                     }}
-      //                   />
-      //                 </View>
-      //                 <View style={{flex: 0.7}}>
-      //                   <Text
-      //                     style={{
-      //                       ...FONTS.body5,
-      //                       color: COLORS.white,
-      //                     }}>
-      //                     {item.food.name}
-      //                   </Text>
-      //                 </View>
-      //               </View>
-
-      //               <View
-      //                 style={{
-      //                   marginTop: 10,
-      //                   alignItems: 'flex-end',
-      //                 }}>
-      //                 <Text
-      //                   style={{
-      //                     color: COLORS.white,
-      //                     ...FONTS.h3,
-      //                   }}>
-      //                   {item.qty} ✘ {item.price} = ₹{item.total}
-      //                 </Text>
-      //               </View>
-      //             </View>
-      //           );
-      //         }
-      //       })}
-      //     </View>
-      //     <View
-      //       style={{
-      //         marginTop: 15,
-      //         alignItems: 'flex-end',
-      //         borderTopWidth: 2,
-      //         borderTopColor: COLORS.white,
-      //       }}>
-      //       <Text
-      //         style={{
-      //           ...FONTS.h2,
-      //           color: COLORS.white,
-      //           marginTop: 10,
-      //         }}>
-      //         Total: ₹{total}
-      //       </Text>
-      //     </View>
-      //     <View style={{alignItems: 'center', justifyContent: 'center'}}>
-      //       <Pressable
-      //         style={{
-      //           backgroundColor: COLORS.white,
-      //           borderRadius: SIZES.radius * 2,
-      //           height: 50,
-      //           width: 170,
-      //           marginTop: 20,
-      //           alignItems: 'center',
-      //           justifyContent: 'center',
-      //         }}
-      //         onPress={() => {
-      //           // navigation.navigate('Payment', {
-      //           //   restaurant: {
-      //           //     name: restaurant?.name,
-      //           //     location: restaurant?.restaurants[0].location,
-      //           //     courier: restaurant?.restaurants[0].courier,
-      //           //     rating: restaurant?.restaurants[0].rating,
-      //           //   },
-      //           // })
-      //           onPay();
-      //         }}>
-      //         <View>
-      //           <Text
-      //             style={{
-      //               ...FONTS.h5,
-      //               color: COLORS.blue,
-      //             }}>
-      //             Pay Now ₹{total}
-      //           </Text>
-      //         </View>
-      //       </Pressable>
-      //     </View>
-      //   </View>
-      // );
     };
 
     return (
@@ -311,62 +227,77 @@ const Cart = ({route, navigation, cart, total, dispatch}) => {
   return (
     <View
       style={{flex: 1, backgroundColor: COLORS.white, marginTop: insets.top}}>
-      <View style={styles.header}>
-        <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-        <Text style={{...FONTS.h5, marginLeft: SIZES.spacing.m}}>Cart</Text>
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {renderCards()}
-        {cart.length !== 0 ? (
-          <View>
-            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+      <IoniconsHeader
+        title="Cart"
+        left={{icon: 'arrow-back', onPress: () => navigation.goBack()}}
+        right={{
+          icon: 'cart',
+          onPress: () => navigation.navigate('Cart'),
+        }}
+        cart
+      />
+      {amount !== 0 ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {renderCards()}
+          {cart.length !== 0 ? (
+            <View>
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <Pressable
+                  style={{
+                    backgroundColor: COLORS.lightBlue,
+                    borderRadius: SIZES.radius * 2,
+                    height: 50,
+                    width: 170,
+                    marginTop: -15,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 20,
+                  }}
+                  onPress={() => {
+                    onPay();
+                  }}>
+                  <View>
+                    <Text
+                      style={{
+                        ...FONTS.h5,
+                        color: COLORS.blue,
+                      }}>
+                      Pay Now ₹{total}
+                    </Text>
+                  </View>
+                </Pressable>
+              </View>
               <Pressable
                 style={{
-                  backgroundColor: COLORS.lightBlue,
-                  borderRadius: SIZES.radius * 2,
-                  height: 50,
-                  width: 170,
-                  marginTop: -10,
-                  alignItems: 'center',
+                  alignSelf: 'center',
                   justifyContent: 'center',
-                  marginBottom: 20,
+                  height: 50,
+                  width: 150,
+                  backgroundColor: COLORS.lightBlue,
+                  borderRadius: SIZES.borderRadii.l,
+                  marginBottom: 30,
                 }}
                 onPress={() => {
-                  onPay();
+                  dispatch({type: CLEAR_CART});
                 }}>
-                <View>
-                  <Text
-                    style={{
-                      ...FONTS.h5,
-                      color: COLORS.blue,
-                    }}>
-                    Pay Now ₹{total}
-                  </Text>
+                <View style={{alignItems: 'center'}}>
+                  <Text style={{...FONTS.body3}}>CLEAR CART</Text>
                 </View>
               </Pressable>
             </View>
-            <Pressable
-              style={{
-                alignSelf: 'center',
-                justifyContent: 'center',
-                height: 50,
-                width: 150,
-                backgroundColor: COLORS.lightBlue,
-                borderRadius: SIZES.borderRadii.l,
-                marginBottom: 30,
-              }}
-              onPress={() => {
-                dispatch({type: CLEAR_CART});
-              }}>
-              <View style={{alignItems: 'center'}}>
-                <Text style={{...FONTS.body3}}>CLEAR CART</Text>
-              </View>
-            </Pressable>
-          </View>
-        ) : (
-          <View />
-        )}
-      </ScrollView>
+          ) : (
+            <View />
+          )}
+        </ScrollView>
+      ) : (
+        <View
+          style={{
+            alignItems: 'center',
+            marginTop: SIZES.height * 0.38,
+          }}>
+          <Text style={{...FONTS.h2}}>Your cart is Empty!!</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -381,9 +312,9 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(store) {
-  const {cart, total} = store;
+  const {cart, total, amount, name} = store;
   // console.log(cart);
-  return {cart, total};
+  return {cart, total, amount, name};
 }
 
 export default connect(mapStateToProps)(Cart);

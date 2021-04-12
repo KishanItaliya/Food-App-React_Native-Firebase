@@ -49,6 +49,7 @@ export const SIZES = {
   h4: 14,
   h5: 19,
   h6: 20,
+  h7: 12,
   body1: 30,
   body2: 22,
   body3: 16,
@@ -66,6 +67,7 @@ export const FONTS = {
   h4: {fontFamily: 'SFProDisplay-Bold', fontSize: SIZES.h4, lineHeight: 22},
   h5: {fontFamily: 'SFProDisplay-Bold', fontSize: SIZES.h5, lineHeight: 22},
   h6: {fontFamily: 'SFProDisplay-Bold', fontSize: SIZES.h6, lineHeight: 24},
+  h7: {fontFamily: 'SFProDisplay-Bold', fontSize: SIZES.h7, lineHeight: 14},
   body1: {
     fontFamily: 'SFProDisplay-Regular',
     fontSize: SIZES.body1,

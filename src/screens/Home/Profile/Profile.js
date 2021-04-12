@@ -5,10 +5,7 @@ import {
   StyleSheet,
   TextInput,
   Image,
-  Platform,
   Pressable,
-  ScrollView,
-  Modal,
 } from 'react-native';
 import Header from '../../../components/Header';
 import {COLORS, FONTS, SIZES} from '../../../constants';
@@ -43,20 +40,6 @@ const Profile = ({navigation}) => {
   useEffect(() => {
     fetchProfile();
   }, []);
-
-  const modalCountry = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        onShow={() => (
-          <View>
-            <TextInput placeholder="HII" />
-          </View>
-        )}
-      />
-    );
-  };
 
   return (
     <View style={styles.container}>

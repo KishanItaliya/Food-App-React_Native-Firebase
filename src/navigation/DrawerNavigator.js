@@ -4,6 +4,7 @@ import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import {Drawer} from 'react-native-paper';
 import {DrawerActions} from '@react-navigation/native';
 import RoundedIcon from '../components/RoundedIcon';
+import FontAwesomeRoundedIcon from '../components/FontAwesomeRoundedIcon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {COLORS, FONTS, SIZES, images} from '../constants';
 import Header from '../components/Header';
@@ -61,8 +62,13 @@ const DrawerContent = props => {
               onPress: () =>
                 props.navigation.dispatch(DrawerActions.closeDrawer()),
             }}
-            right={{icon: 'shopping-cart', onPress: () => true}}
+            right={{
+              icon: 'shopping-cart',
+              onPress: () => props.navigation.navigate('Cart'),
+            }}
             dark
+            cart
+            drawerCart
           />
         </View>
       </View>
@@ -124,11 +130,59 @@ const DrawerContent = props => {
               }}
             />
 
+            {/* <DrawerItem
+              icon={() => (
+                <FontAwesomeRoundedIcon
+                  iconRatio={0.6}
+                  name="book"
+                  size={36}
+                  backgroundColor={COLORS.yellow}
+                  color={COLORS.blue}
+                />
+              )}
+              label="User Reviews"
+              onPress={() => {
+                props.navigation.navigate('UserReviews');
+              }}
+            /> */}
+
             <DrawerItem
               icon={() => (
-                <RoundedIcon
+                <FontAwesomeRoundedIcon
                   iconRatio={0.6}
-                  name="truck"
+                  name="money"
+                  size={36}
+                  backgroundColor={COLORS.primary}
+                  color={COLORS.blue}
+                />
+              )}
+              label="Orders"
+              onPress={() => {
+                props.navigation.navigate('Orders');
+              }}
+            />
+
+            <DrawerItem
+              icon={() => (
+                <FontAwesomeRoundedIcon
+                  iconRatio={0.6}
+                  name="book"
+                  size={36}
+                  backgroundColor={COLORS.yellow}
+                  color={COLORS.blue}
+                />
+              )}
+              label="All Reviews"
+              onPress={() => {
+                props.navigation.navigate('Review');
+              }}
+            />
+
+            <DrawerItem
+              icon={() => (
+                <FontAwesomeRoundedIcon
+                  iconRatio={0.6}
+                  name="sign-out"
                   size={36}
                   backgroundColor={COLORS.blue}
                   color={COLORS.white}
