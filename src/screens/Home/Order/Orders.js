@@ -4,7 +4,7 @@ import {AuthContext} from '../../../navigation/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
 import IoniconsHeader from '../../../components/IoniconsHeader';
 import Order from './Order';
-import {FONTS, SIZES} from '../../../constants';
+import {COLORS, FONTS, SIZES} from '../../../constants';
 
 const Orders = ({navigation}) => {
   const {user} = useContext(AuthContext);
@@ -15,6 +15,7 @@ const Orders = ({navigation}) => {
       .collection('users')
       .doc(user.uid)
       .collection('orders')
+      .orderBy('time', 'desc')
       .onSnapshot(snapshot =>
         setOrders(
           snapshot.docs.map(doc => ({
@@ -25,10 +26,10 @@ const Orders = ({navigation}) => {
       );
   }, []);
 
-  console.log('ORDER', orders);
+  // console.log('ORDER', orders);
 
   return (
-    <View>
+    <View style={{flex: 1, backgroundColor: COLORS.white}}>
       <IoniconsHeader
         title="Orders"
         left={{icon: 'arrow-back', onPress: () => navigation.goBack()}}

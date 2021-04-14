@@ -1,4 +1,4 @@
-import React, {useState, useRef, useContext} from 'react';
+import React, {useState, useRef, useContext, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -37,8 +37,8 @@ const SubmitReview = ({route, id, name, navigation, dispatch}) => {
   const {user} = useContext(AuthContext);
   const [rating, setRating] = useState();
   const [showModal, setShowModal] = useState(true);
-  const pay_id = route.params;
-  console.log('DD', pay_id);
+  const order_id = route.params;
+  // console.log('DD', pay_id);
 
   getRating()
     .then(rating => setRating(rating))
@@ -61,7 +61,7 @@ const SubmitReview = ({route, id, name, navigation, dispatch}) => {
           user.uid,
           name,
           id,
-          pay_id,
+          order_id,
         );
       })
       .catch(error => {
@@ -123,8 +123,8 @@ const SubmitReview = ({route, id, name, navigation, dispatch}) => {
                     name="close"
                     size={32}
                     onPress={() => {
-                      setShowModal(!showModal),
-                        navigation.navigate('Restaurants');
+                      // setShowModal(!showModal),
+                      navigation.navigate('Restaurants');
                     }}
                     color={COLORS.white}
                   />
@@ -188,12 +188,15 @@ const SubmitReview = ({route, id, name, navigation, dispatch}) => {
               </View>
             </View>
           </Modal>
-          <Button
+          {/* <Button
             title="Click To Submit Review"
             onPress={() => {
               setShowModal(!showModal);
             }}
-          />
+          /> */}
+          <View style={{alignItems: 'center', marginTop: SIZES.height * 0.42}}>
+            <Text style={{...FONTS.h3}}>Review submitted successfully</Text>
+          </View>
         </View>
       </View>
     </View>

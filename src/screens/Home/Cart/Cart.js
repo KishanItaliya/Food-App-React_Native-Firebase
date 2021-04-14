@@ -20,6 +20,7 @@ import firestore from '@react-native-firebase/firestore';
 import {connect} from 'react-redux';
 import CartItem from './CartItem';
 import {CLEAR_CART, GET_TOTALS} from '../../../redux/actions';
+import moment from 'moment';
 
 const Cart = ({route, navigation, cart, total, amount, dispatch, name}) => {
   const {user} = useContext(AuthContext);
@@ -76,6 +77,7 @@ const Cart = ({route, navigation, cart, total, amount, dispatch, name}) => {
           name: name,
           total: total,
           cart: cart,
+          time: moment().utcOffset('+05:30').format('MMMM Do YYYY, h:mm:ss a'),
         });
       } else {
         console.log('Order not stored!!');
@@ -118,14 +120,14 @@ const Cart = ({route, navigation, cart, total, amount, dispatch, name}) => {
     // console.log('ORDER>>', order);
 
     var options = {
-      name: 'KPI ORGANIZATION',
+      name: 'AAHAR',
       // image: images.bg_1,
-      description: 'Aahar Food App',
+      description: 'Food Delivery App',
       order_id: order.id,
       key: RazorpayApiKey,
       prefill: {
         email: user.email,
-        contact: '9723592915',
+        contact: '',
         name: profile?.data == null ? 'Username' : profile?.data.username,
       },
       theme: {color: COLORS.blue},
@@ -142,7 +144,7 @@ const Cart = ({route, navigation, cart, total, amount, dispatch, name}) => {
         saveOrder(transaction, cart);
         alert(`Payment Successful for: ${transaction.razorpay_payment_id}`);
         navigation.navigate('SubmitReview', {
-          payment_id: transaction.razorpay_payment_id,
+          order_id: transaction.razorpay_order_id,
         });
       })
       .catch(error => {

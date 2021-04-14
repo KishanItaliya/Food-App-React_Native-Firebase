@@ -66,7 +66,7 @@ const Profile = ({navigation}) => {
       </Pressable>
 
       <View style={{marginTop: 30, marginBottom: 20, marginHorizontal: 40}}>
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate('UpdateProfile')}>
           <View style={styles.inputContainer}>
             <Text style={styles.textContainer}>
               {profile?.data == null
@@ -78,7 +78,7 @@ const Profile = ({navigation}) => {
           </View>
         </Pressable>
 
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate('UpdateProfile')}>
           <View style={styles.inputContainer}>
             <Text style={styles.textContainer}>
               {profile?.data == null
@@ -90,7 +90,7 @@ const Profile = ({navigation}) => {
           </View>
         </Pressable>
 
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate('UpdateProfile')}>
           <View style={styles.inputContainer}>
             <Text style={styles.textContainer}>
               {profile?.data == null
@@ -102,7 +102,7 @@ const Profile = ({navigation}) => {
           </View>
         </Pressable>
 
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate('UpdateProfile')}>
           <View style={styles.inputContainer}>
             <Text style={styles.textContainer}>
               {profile?.data == null
@@ -114,7 +114,7 @@ const Profile = ({navigation}) => {
           </View>
         </Pressable>
 
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate('UpdateProfile')}>
           <View style={styles.inputContainer}>
             <Text style={styles.textContainer}>
               {profile?.data == null
@@ -141,6 +141,7 @@ const Profile = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.white,
   },
   avatarPlaceholder: {
     width: 100,

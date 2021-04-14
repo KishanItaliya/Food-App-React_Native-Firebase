@@ -6,6 +6,7 @@ import HomeNavigator from '../navigation/HomeNavigator';
 import {COLORS} from '../constants';
 import {AuthContext} from './AuthProvider';
 import auth from '@react-native-firebase/auth';
+import LottieView from 'lottie-react-native';
 
 const Routes = () => {
   const {user, setUser} = useContext(AuthContext);
@@ -24,7 +25,9 @@ const Routes = () => {
   }, []);
 
   if (initializing) {
-    return null;
+    return (
+      <LottieView source={require('../assets/loader.json')} autoPlay loop />
+    );
   }
 
   return (

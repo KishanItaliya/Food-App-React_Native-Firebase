@@ -37,7 +37,7 @@ const ReviewCard = ({review, navigation}) => {
   const item = review.data;
   const [rating, setRating] = useState();
   const [showModal, setShowModal] = useState(false);
-  console.log('RR>>', item);
+  // console.log('RR>>', item);
   getRating()
     .then(rating => setRating(rating))
     .catch(error => console.log('ERROR', error));
@@ -59,7 +59,7 @@ const ReviewCard = ({review, navigation}) => {
           user.uid,
           item.restaurant_name,
           item.restaurant_id,
-          item.payId,
+          item.orderId,
         );
       })
       .catch(error => {
@@ -180,19 +180,25 @@ const ReviewCard = ({review, navigation}) => {
           </View>
         </View>
       </Modal>
-      <Pressable
-        onPress={() => {
-          setShowModal(!showModal);
-        }}>
+      <View>
         <View
           style={{
             width: SIZES.width * 0.9,
             backgroundColor: COLORS.primary,
-            height: 100,
             borderRadius: 12,
             marginBottom: 10,
-            padding: 10,
+            padding: 15,
           }}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={{...FONTS.h3, color: COLORS.white}}>
+              ORDER ID{` `}:{' '}
+            </Text>
+            <Text style={{...FONTS.h3, color: COLORS.white}}>
+              {` `}
+              {item?.orderId}
+            </Text>
+          </View>
+          <Text style={{...FONTS.body3, textAlign: 'right'}}>{item?.time}</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -217,12 +223,37 @@ const ReviewCard = ({review, navigation}) => {
             </Text>
           </View>
           <View>
-            <Text style={{...FONTS.body5, color: COLORS.blue}}>
+            <Text style={{...FONTS.body3, color: COLORS.blue}}>
               {item?.status}
             </Text>
           </View>
+          <View style={{alignItems: 'center'}}>
+            <Pressable
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 15,
+                backgroundColor: COLORS.white,
+                width: 90,
+                height: 40,
+                borderRadius: 10,
+              }}
+              onPress={() => {
+                setShowModal(!showModal);
+              }}>
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: COLORS.primary,
+                }}>
+                EDIT
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </Pressable>
+      </View>
     </View>
   );
 };

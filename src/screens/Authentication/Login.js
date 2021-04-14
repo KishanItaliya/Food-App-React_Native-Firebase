@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import TextInput from '../../components/Form/TextInput';
 import Checkbox from '../../components/Form/Checkbox';
 import {AuthContext} from '../../navigation/AuthProvider';
+import LottieView from 'lottie-react-native';
 
 const aspectRatio = 750 / 1125;
 const height = SIZES.width * aspectRatio;
@@ -25,6 +26,12 @@ const Login = ({navigation}) => {
   const insets = useSafeAreaInsets();
   const {login} = useContext(AuthContext);
 
+  const setLoader = () => (
+    <View style={{flex: 1}}>
+      <LottieView source={require('../../assets/loader1.json')} autoPlay loop />
+    </View>
+  );
+
   const {
     handleChange,
     handleBlur,
@@ -38,6 +45,9 @@ const Login = ({navigation}) => {
     initialValues: {email: '', password: '', remember: false},
     onSubmit: values => {
       console.log(values);
+      setTimeout(() => {
+        setLoader();
+      }, 2000);
       login(values.email, values.password);
     },
   });
@@ -143,15 +153,16 @@ const Login = ({navigation}) => {
               <View
                 style={{
                   flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-end',
                   alignItems: 'center',
                   marginVertical: SIZES.spacing.s,
+                  marginRight: 10,
                 }}>
-                <Checkbox
+                {/* <Checkbox
                   label="Remember me"
                   checked={values.remember}
                   onChange={() => setFieldValue('remember', !values.remember)}
-                />
+                /> */}
                 <BorderlessButton
                   onPress={() => navigation.navigate('ForgotPassword')}>
                   <Text style={{...FONTS.body3, color: COLORS.blue}}>

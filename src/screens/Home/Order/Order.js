@@ -1,10 +1,13 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Pressable} from 'react-native';
 import {COLORS, FONTS} from '../../../constants';
 import Product from './Product';
+import {useNavigation} from '@react-navigation/native';
 
 const Order = ({order}) => {
-  console.log('OO', order);
+  // console.log('OO', order);
+  const navigation = useNavigation();
+
   return (
     <View
       style={{
@@ -16,12 +19,27 @@ const Order = ({order}) => {
         elevation: 3,
       }}>
       <View>
-        <Text style={{...FONTS.h3, color: COLORS.white}}>
-          {order.data.payment_id}
+        <View style={{flexDirection: 'row'}}>
+          <Text style={{...FONTS.h3, color: COLORS.white}}>
+            ORDER ID{` `}:{' '}
+          </Text>
+          <Text style={{...FONTS.h3, color: COLORS.white}}>
+            {` `}
+            {order.data.order_id}
+          </Text>
+        </View>
+
+        <Text style={{...FONTS.body3, textAlign: 'right'}}>
+          {order.data.time}
         </Text>
       </View>
       {order.data.cart?.map(item => (
-        <Product name={item.name} price={item.price} qty={item.qty} />
+        <Product
+          name={item.name}
+          price={item.price}
+          qty={item.qty}
+          photo={item.photo}
+        />
       ))}
       <View
         style={{
@@ -34,6 +52,31 @@ const Order = ({order}) => {
           ₹{order.data.total}
         </Text>
       </View>
+      {/* <View style={{alignItems: 'center'}}>
+        <Pressable
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 15,
+            backgroundColor: COLORS.white,
+            width: 90,
+            height: 40,
+            borderRadius: 10,
+          }}
+          onPress={() => {
+            navigation.navigate('OrderDelivery', {name: order.data.name});
+          }}>
+          <Text
+            style={{
+              ...FONTS.h3,
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: COLORS.primary,
+            }}>
+            TRACK
+          </Text>
+        </Pressable>
+      </View> */}
     </View>
   );
 };

@@ -24,67 +24,10 @@ const Restaurant = ({route, navigation, add_to_cart, cart, total, amount}) => {
   const [orderItems, setOrderItems] = useState([]);
 
   useEffect(() => {
-    const {item, currentLocation} = route.params;
-    setRestaurant(item);
+    const {product, currentLocation} = route.params;
+    setRestaurant(product);
     setCurrentLocation(currentLocation);
   });
-
-  const renderHeader = () => {
-    return (
-      <View style={{flexDirection: 'row', marginTop: 10}}>
-        <TouchableOpacity
-          style={{
-            width: 50,
-            paddingLeft: SIZES.base * 2,
-            justifyContent: 'center',
-          }}
-          onPress={() => navigation.goBack()}>
-          <Image
-            source={icons.back}
-            resizeMode="contain"
-            style={{
-              width: 25,
-              height: 25,
-            }}
-          />
-        </TouchableOpacity>
-
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <View
-            style={{
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingHorizontal: SIZES.base * 3,
-              borderRadius: SIZES.radius * 2,
-              backgroundColor: COLORS.lightGray2,
-            }}>
-            <Text style={{...FONTS.body3}}>{restaurant?.name}</Text>
-          </View>
-        </View>
-        <TouchableOpacity
-          style={{
-            width: 50,
-            paddingRight: SIZES.base * 2,
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={icons.list}
-            resizeMode="contain"
-            style={{
-              width: 20,
-              height: 20,
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  };
 
   const renderDots = () => {
     const dotPosition = Animated.divide(scrollX, SIZES.width);
@@ -155,7 +98,7 @@ const Restaurant = ({route, navigation, add_to_cart, cart, total, amount}) => {
                 <View style={{height: SIZES.height * 0.35}}>
                   <View style={{alignItems: 'center', marginTop: 15}}>
                     <Image
-                      source={item.photo}
+                      source={{uri: item.photo}}
                       resizeMode="cover"
                       style={{
                         width: SIZES.width * 0.9,

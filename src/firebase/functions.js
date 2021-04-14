@@ -1,5 +1,6 @@
 import {ToastAndroid} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import moment from 'moment';
 
 export const submitReview = (review, rating, name, status, userId) => {
   if (status != undefined) {
@@ -64,20 +65,25 @@ export const saveReview = (
   userId,
   restaurant_name,
   id,
-  payId,
+  orderId,
 ) => {
-  console.log('RE', restaurant_name);
-  console.log('PI', payId);
+  // console.log('RE', restaurant_name);
+  // console.log('PI', payId);
   let db = firestore()
     .collection('users')
     .doc(userId)
     .collection('reviews')
-    .doc(payId.payment_id);
+    .doc(orderId.order_id);
   let db1 = firestore()
     .collection('reviews')
     .doc(restaurant_name)
     .collection('positive')
-    .doc(payId.payment_id);
+    .doc(orderId.order_id);
+  let db2 = firestore()
+    .collection('reviews')
+    .doc(restaurant_name)
+    .collection('negative')
+    .doc(orderId.order_id);
   if (status != undefined && restaurant_name !== null) {
     db.set({
       restaurant_id: id,
@@ -85,8 +91,8 @@ export const saveReview = (
       rating: rating,
       status: status.substring(0, 8),
       restaurant_name: restaurant_name,
-      payId: payId.payment_id,
-      time: Date.now(),
+      orderId: orderId.order_id,
+      time: moment().utcOffset('+05:30').format('MMMM Do YYYY, h:mm:ss a'),
     })
       .then(() => {
         console.log('Review submitted successfully!!');
@@ -110,9 +116,9 @@ export const saveReview = (
           restaurant_id: id,
           restaurant_name: restaurant_name,
           userId: userId,
-          payId: payId.payment_id,
+          orderId: orderId.order_id,
           status: status.substring(0, 8),
-          time: Date.now(),
+          time: moment().utcOffset('+05:30').format('MMMM Do YYYY, h:mm:ss a'),
         })
         .then(() => {
           console.log('Review submitted successfully!!');
@@ -121,16 +127,16 @@ export const saveReview = (
           console.log('ERROR', error);
         });
     } else {
-      db1
+      db2
         .set({
           review: review,
           rating: rating,
           restaurant_id: id,
           restaurant_name: restaurant_name,
           userId: userId,
-          payId: payId.payment_id,
+          orderId: orderId.order_id,
           status: status.substring(0, 8),
-          time: Date.now(),
+          time: moment().utcOffset('+05:30').format('MMMM Do YYYY, h:mm:ss a'),
         })
         .then(() => {
           console.log('Review submitted successfully!!');
@@ -151,20 +157,25 @@ export const updateReview = (
   userId,
   restaurant_name,
   id,
-  payId,
+  orderId,
 ) => {
-  console.log('RE', restaurant_name);
-  console.log('PI', payId);
+  // console.log('RE', restaurant_name);
+  // console.log('PI', payId);
   let db = firestore()
     .collection('users')
     .doc(userId)
     .collection('reviews')
-    .doc(payId);
+    .doc(orderId);
   let db1 = firestore()
     .collection('reviews')
     .doc(restaurant_name)
     .collection('positive')
-    .doc(payId);
+    .doc(orderId);
+  let db2 = firestore()
+    .collection('reviews')
+    .doc(restaurant_name)
+    .collection('negative')
+    .doc(orderId);
   if (status != undefined && restaurant_name !== null) {
     db.set({
       restaurant_id: id,
@@ -172,8 +183,8 @@ export const updateReview = (
       rating: rating,
       status: status.substring(0, 8),
       restaurant_name: restaurant_name,
-      payId: payId,
-      time: Date.now(),
+      orderId: orderId,
+      time: moment().utcOffset('+05:30').format('MMMM Do YYYY, h:mm:ss a'),
     })
       .then(() => {
         console.log('Review submitted successfully!!');
@@ -197,9 +208,9 @@ export const updateReview = (
           restaurant_id: id,
           restaurant_name: restaurant_name,
           userId: userId,
-          payId: payId,
+          orderId: orderId,
           status: status.substring(0, 8),
-          time: Date.now(),
+          time: moment().utcOffset('+05:30').format('MMMM Do YYYY, h:mm:ss a'),
         })
         .then(() => {
           console.log('Review submitted successfully!!');
@@ -208,16 +219,16 @@ export const updateReview = (
           console.log('ERROR', error);
         });
     } else {
-      db1
+      db2
         .set({
           review: review,
           rating: rating,
           restaurant_id: id,
           restaurant_name: restaurant_name,
           userId: userId,
-          payId: payId,
+          orderId: orderId,
           status: status.substring(0, 8),
-          time: Date.now(),
+          time: moment().utcOffset('+05:30').format('MMMM Do YYYY, h:mm:ss a'),
         })
         .then(() => {
           console.log('Review submitted successfully!!');

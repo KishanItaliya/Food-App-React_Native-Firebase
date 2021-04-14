@@ -25,22 +25,14 @@ const ProfileSchema = Yup.object().shape({
     .min(5, 'Too Short!')
     .max(30, 'Too Long!')
     .required('Required'),
-  address: Yup.string()
-    .min(10, 'Too short!')
-    .max(100, 'Too long!')
-    .required('Required'),
-  city: Yup.string()
-    .min(3, 'Too short!')
-    .max(50, 'Too long!')
-    .required('Required'),
-  state: Yup.string()
-    .min(3, 'Too short!')
-    .max(100, 'Too long!')
-    .required('Required'),
-  country: Yup.string()
-    .min(3, 'Too short!')
-    .max(100, 'Too long!')
-    .required('Required'),
+  address: Yup.string().min(10, 'Too short!').max(100, 'Too long!'),
+  // .required('Required'),
+  city: Yup.string().min(3, 'Too short!').max(50, 'Too long!'),
+  // .required('Required'),
+  state: Yup.string().min(3, 'Too short!').max(100, 'Too long!'),
+  // .required('Required'),
+  country: Yup.string().min(3, 'Too short!').max(100, 'Too long!'),
+  // .required('Required'),
 });
 
 const UpdateProfile = ({navigation}) => {
@@ -376,6 +368,7 @@ const UpdateProfile = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.white,
   },
   actionButtonIcon: {
     fontSize: 20,

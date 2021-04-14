@@ -33,7 +33,7 @@ const CartItem = ({
         }}>
         <View style={{flex: 0.3, marginRight: 10}}>
           <Image
-            source={photo}
+            source={{uri: photo}}
             style={{
               height: 80,
               width: 80,

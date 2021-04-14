@@ -15,6 +15,7 @@ const userReviews = ({navigation}) => {
       .collection('users')
       .doc(user.uid)
       .collection('reviews')
+      .orderBy('time', 'desc')
       .onSnapshot(snapshot =>
         setReviews(
           snapshot.docs.map(doc => ({
@@ -25,7 +26,7 @@ const userReviews = ({navigation}) => {
       );
   }, []);
 
-  console.log('REVIEW>>', reviews);
+  // console.log('REVIEW>>', reviews);
   return (
     <View style={{flex: 1, backgroundColor: COLORS.white}}>
       <IoniconsHeader

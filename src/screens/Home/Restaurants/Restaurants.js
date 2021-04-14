@@ -1,10 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Header from '../../../components/Header';
 import {COLORS} from '../../../constants';
 import ListCategories from './ListCategories';
+import firestore from '@react-native-firebase/firestore';
 
 const Restaurants = ({navigation}) => {
+  const [items, setItems] = useState([]);
+
+  const fetchItems = () => {
+    firestore()
+      .collection('items')
+      .onSnapshot(snapshot =>
+        setItems(
+          snapshot.docs.map(doc => ({
+            id: doc.id,
+            data: doc.data(),
+          })),
+        ),
+      );
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
   return (
     <View style={styles.container}>
       <Header
@@ -16,7 +35,7 @@ const Restaurants = ({navigation}) => {
         }}
         cart
       />
-      <ListCategories />
+      <ListCategories data={items} />
     </View>
   );
 };

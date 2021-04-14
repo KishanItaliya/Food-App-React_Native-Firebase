@@ -14,7 +14,7 @@ const slides = [
       "Hungry? Order food in just a few clicks and we'll take care of you..",
     color: '#72BCD4',
     picture: {
-      src: require('../../../assets/images/1.png'),
+      src: images.onboarding1,
       width: 4875,
       height: 3883,
     },
@@ -27,7 +27,7 @@ const slides = [
     description: 'Track your food order in real-time with an interactive map.',
     color: '#FFB6C1',
     picture: {
-      src: require('../../../assets/images/3.png'),
+      src: images.onboarding2,
       width: 5025,
       height: 3920,
     },
@@ -41,7 +41,7 @@ const slides = [
       'Pay with your credit cards, Apple Pay or Android Pay, with one click.',
     color: '#FFC04C',
     picture: {
-      src: require('../../../assets/images/2.png'),
+      src: images.onboarding3,
       width: 5025,
       height: 3965,
     },
